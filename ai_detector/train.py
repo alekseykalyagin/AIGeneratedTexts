@@ -79,6 +79,17 @@ def split_train_val(csv_path, train_output, val_output, val_size=0.2, random_sta
     )
     train_data.to_csv(train_output, index=False)
     val_data.to_csv(val_output, index=False)
+    repo = dvc.repo.Repo()
+
+    repo.add(train_output)
+    os.system(f"git add {train_output}.dvc .gitignore")
+    os.system(f'git commit -m "Added {train_output} to DVC"')
+    repo.push(train_output)
+
+    repo.add(val_output)
+    os.system(f"git add {val_output}.dvc .gitignore")
+    os.system(f'git commit -m "Added {val_output} to DVC"')
+    repo.push(val_output)
 
 
 def pull_dvc_data():

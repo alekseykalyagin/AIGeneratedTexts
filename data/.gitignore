@@ -1,2 +1,4 @@
 /test_essays.csv
 /train_essays.csv
+/train_split.csv
+/val_split.csv
