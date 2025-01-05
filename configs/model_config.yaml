@@ -1,2 +1,0 @@
-model_path: "../model/final_model.pth"
-model_predictions_path: "../data/predictions.csv"

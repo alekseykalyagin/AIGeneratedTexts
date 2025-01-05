@@ -13,6 +13,8 @@ pytorch-lightning = ">=1.6.0, <3.0.0"
 transformers = "4.29.1"
 pre-commit = "^2.20.0"
 dvc = "^3.0.0"
+hydra-core = "1.3.2"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

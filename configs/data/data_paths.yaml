@@ -1,0 +1,6 @@
+data_path: "../data/train_essays.csv"   # Path to the full dataset
+train_output: "../data/train_split.csv"  # Output path for training data after splitting
+val_output: "../data/val_split.csv"      # Output path for validation data after splitting
+val_size: 0.2                        # Proportion of the dataset to include in the validation split
+random_state: 42                     # Random seed for splitting
+batch_size: 16                       # Batch size for data loading
