@@ -1,0 +1,5 @@
+stages:
+  train:
+    cmd: python ai_detector/train.py
+    deps:
+      - ai_detector

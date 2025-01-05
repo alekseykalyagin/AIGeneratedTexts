@@ -5,5 +5,5 @@ monitor_metric: "val_loss"            # Metric to monitor for checkpoint saving
 monitor_mode: "min"                   # Mode for monitoring the metric (min or max)
 log_dir: "logs"                       # Directory for saving training logs
 max_epochs: 10                        # Number of epochs for training
-final_model_path: "models/final_model.pth"  # Final model path after training
-model_dir: "models"                   # Directory for saving the final model
+final_model_path: "model/final_model.pth"  # Final model path after training
+model_dir: "model"                   # Directory for saving the final model

@@ -8,24 +8,19 @@ import pytorch_lightning as pl
 import torch
 from classifiers import EssayClassifier
 from dataset import get_dataloader
-from omegaconf import OmegaConf
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import CSVLogger
 from sklearn.model_selection import train_test_split
 from transformers import AutoTokenizer
 
 
-# Hydra config path
 @hydra.main(config_path="../configs", config_name="config")
 def main(cfg):
-    print(OmegaConf.to_yaml(cfg))
     # Using OmegaConf to load the data paths and model configurations
     data_cfg = cfg["data"]  # Loads data paths configuration
     model_cfg = cfg["model"]  # Loads model configuration
 
-    # DVC data path
-    data_path = data_cfg.data_path
-    pull_dvc_data(data_path)
+    pull_dvc_data()
 
     # Load tokenizer
     tokenizer = AutoTokenizer.from_pretrained(model_cfg.model_name)
@@ -86,10 +81,10 @@ def split_train_val(csv_path, train_output, val_output, val_size=0.2, random_sta
     val_data.to_csv(val_output, index=False)
 
 
-def pull_dvc_data(data_path):
+def pull_dvc_data():
     repo = dvc.repo.Repo()
-    repo.pull(data_path)
-    print(f"Pulled data from DVC: {data_path}")
+    repo.pull()
+    print("Pulled data from DVC")
 
 
 def add_and_push_dvc_model(model_path):
