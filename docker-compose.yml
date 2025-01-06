@@ -1,0 +1,48 @@
+services:
+  app:
+    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow-service:5000
+      MLFLOW_S3_ENDPOINT_URL: https://storage.yandexcloud.net
+      AWS_ENDPOINT_URL: https://storage.yandexcloud.net
+      AWS_ACCESS_KEY_ID: ""
+      AWS_SECRET_ACCESS_KEY: ""
+      AWS_DEFAULT_REGION: ru-central1
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+  mlflow-service:
+    image: ghcr.io/mlflow/mlflow:v2.15.1
+    environment:
+      MLFLOW_S3_ENDPOINT_URL: https://storage.yandexcloud.net
+      AWS_ENDPOINT_URL: https://storage.yandexcloud.net
+      AWS_ACCESS_KEY_ID: ""
+      AWS_SECRET_ACCESS_KEY: ""
+      AWS_DEFAULT_REGION: ru-central1
+    command:
+      - bash
+      - -c
+      - |
+        pip install boto3 --quiet
+        mlflow server --host 0.0.0.0 \
+            --default-artifact-root s3://aakalyagin-mlops/mlflow --serve-artifacts
+    expose:
+      - "5000"
+    ports:
+      - "5050:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    networks:
+      - app-network
+
+volumes:
+  mlflow-data:
+
+networks:
+  app-network:
+    driver: bridge

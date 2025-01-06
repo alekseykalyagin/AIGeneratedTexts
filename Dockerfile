@@ -15,3 +15,5 @@ WORKDIR /project
 RUN poetry install --no-root
 
 RUN poetry run pre-commit install
+
+EXPOSE 8000

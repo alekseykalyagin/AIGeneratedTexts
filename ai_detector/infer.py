@@ -1,26 +1,30 @@
+import hydra
 import pandas as pd
 import torch
 from dataset import get_test_dataloader
+from omegaconf import DictConfig
 from transformers import AutoTokenizer, BertForSequenceClassification
 
 
-def infer(
-    test_csv,
-    model_path,
-    tokenizer_name="bert-base-uncased",
-    output_csv="predictions.csv",
-):
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
+@hydra.main(config_path="../configs", config_name="config")
+def infer(cfg: DictConfig):
+
+    data_cfg = cfg["data"]
+    model_cfg = cfg["model"]
+
+    tokenizer = AutoTokenizer.from_pretrained(model_cfg.model_name)
     model = BertForSequenceClassification.from_pretrained(
-        "bert-base-uncased", num_labels=1
+        model_cfg.model_name, num_labels=1
     )
 
-    state_dict = torch.load(model_path)
+    state_dict = torch.load(model_cfg.final_model_path)
     new_state_dict = {k.replace("model.", ""): v for k, v in state_dict.items()}
     model.load_state_dict(new_state_dict, strict=False)
     model.eval()
 
-    test_loader = get_test_dataloader(test_csv, tokenizer, batch_size=16)
+    test_loader = get_test_dataloader(
+        data_cfg.test_path, tokenizer, batch_size=data_cfg.batch_size
+    )
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -41,10 +45,11 @@ def infer(
             for i, pred in enumerate(predictions):
                 results.append({"id": ids[i], "generated": pred})
 
+    output_csv = data_cfg.predictions_output
     df = pd.DataFrame(results)
     df.to_csv(output_csv, index=False)
     print(f"Predictions saved to {output_csv}")
 
 
 if __name__ == "__main__":
-    infer("../data/test_essays.csv", "final_model.pth")
+    infer()

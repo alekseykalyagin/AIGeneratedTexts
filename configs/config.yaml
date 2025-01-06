@@ -1,8 +1,11 @@
 defaults:
-  - data: data_paths   # Reference to the data paths configuration file
-  - model: model_config  # Reference to the model configuration file
+  - data: data_paths
+  - model: model_config
   - override hydra/hydra_logging: disabled
   - override hydra/job_logging: disabled
+mlflow:
+  tracking_uri: "http://mlflow-service:5000"
+  experiment_name: "example_exp"
 hydra:
   run:
     dir: .

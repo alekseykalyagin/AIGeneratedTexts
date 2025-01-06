@@ -1,0 +1,10 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python ai_detector/train.py
+    deps:
+    - path: ai_detector
+      hash: md5
+      md5: b5cf888530a55c4fc1f1059623844f1a.dir
+      size: 12657
+      nfiles: 7
